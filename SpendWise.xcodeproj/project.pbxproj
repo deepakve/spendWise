@@ -10,6 +10,15 @@
 		1A1A1A1A1A1A1A1A1A1A1A1C /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A1D /* DashboardView.swift */; };
 		1A1A1A1A1A1A1A1A1A1A1A1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A1F /* Assets.xcassets */; };
 		1A1A1A1A1A1A1A1A1A1A1A20 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A21 /* Preview Assets.xcassets */; };
+		1A1A1A1A1A1A1A1A1A1A1A38 /* AddExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A39 /* AddExpenseView.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A3A /* CardManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A3B /* CardManagementView.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A3C /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A3D /* Expense.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A3E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A3F /* Card.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A40 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A41 /* Category.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A42 /* Bill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A43 /* Bill.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A44 /* BillingCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A45 /* BillingCycle.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A46 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A47 /* FirebaseService.swift */; };
+		1A1A1A1A1A1A1A1A1A1A1A48 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1A1A1A1A49 /* DashboardViewModel.swift */; };
 		/* End PBXBuildFile section */
 
 		/* Begin PBXFileReference section */
@@ -18,6 +27,15 @@
 		1A1A1A1A1A1A1A1A1A1A1A1D /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		1A1A1A1A1A1A1A1A1A1A1A1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A1A1A1A1A1A1A1A1A1A1A21 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A39 /* AddExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseView.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A3B /* CardManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardManagementView.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A3D /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A3F /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A41 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A43 /* Bill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bill.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A45 /* BillingCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingCycle.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A47 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A1A1A1A1A49 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		/* End PBXFileReference section */
 
 		/* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +75,7 @@
 				1A1A1A1A1A1A1A1A1A1A1A2B /* Services */,
 				1A1A1A1A1A1A1A1A1A1A1A2C /* Resources */,
 				1A1A1A1A1A1A1A1A1A1A1A2D /* Preview Content */,
+				1A1A1A1A1A1A1A1A1A1A1A2E /* Utils */,
 			);
 			path = SpendWise;
 			sourceTree = "<group>";
@@ -73,6 +92,8 @@
 			isa = PBXGroup;
 			children = (
 				1A1A1A1A1A1A1A1A1A1A1A1D /* DashboardView.swift */,
+				1A1A1A1A1A1A1A1A1A1A1A39 /* AddExpenseView.swift */,
+				1A1A1A1A1A1A1A1A1A1A1A3B /* CardManagementView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -80,6 +101,10 @@
 		1A1A1A1A1A1A1A1A1A1A1A29 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1A1A1A1A1A1A1A1A1A1A1A3D /* Expense.swift */,
+				1A1A1A1A1A1A1A1A1A1A1A3F /* Card.swift */,
+				1A1A1A1A1A1A1A1A1A1A1A41 /* Category.swift */,
+				1A1A1A1A1A1A1A1A1A1A1A43 /* Bill.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -87,6 +112,7 @@
 		1A1A1A1A1A1A1A1A1A1A1A2A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				1A1A1A1A1A1A1A1A1A1A1A49 /* DashboardViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -94,6 +120,7 @@
 		1A1A1A1A1A1A1A1A1A1A1A2B /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				1A1A1A1A1A1A1A1A1A1A1A47 /* FirebaseService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -114,10 +141,18 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		1A1A1A1A1A1A1A1A1A1A1A2E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1A1A1A1A1A1A1A1A1A1A1A45 /* BillingCycle.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		/* End PBXGroup section */
 
 		/* Begin PBXNativeTarget section */
-		1A1A1A1A1A1A1A1A1A1A1A2E /* SpendWise */ = {
+		1A1A1A1A1A1A1A1A1A1A1A2F /* SpendWise */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1A1A1A1A1A1A1A1A1A1A1A2F /* Build configuration list for PBXNativeTarget "SpendWise" */;
 			buildPhases = (
@@ -186,6 +221,15 @@
 			files = (
 				1A1A1A1A1A1A1A1A1A1A1A1C /* DashboardView.swift in Sources */,
 				1A1A1A1A1A1A1A1A1A1A1A1A /* SpendWiseApp.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A38 /* AddExpenseView.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A3A /* CardManagementView.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A3C /* Expense.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A3E /* Card.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A40 /* Category.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A42 /* Bill.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A44 /* BillingCycle.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A46 /* FirebaseService.swift in Sources */,
+				1A1A1A1A1A1A1A1A1A1A1A48 /* DashboardViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
