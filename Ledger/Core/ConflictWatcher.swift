@@ -72,7 +72,7 @@ final class ConflictWatcher {
             where change.changedObjectID.entity.name == "CDStatement" {
                 flagIfCollides(objectID: change.changedObjectID, context: ctx)
             }
-            if let token = transaction.token { save(token: token) }
+            save(token: transaction.token)
         }
 
         if ctx.hasChanges { try? ctx.save() }
