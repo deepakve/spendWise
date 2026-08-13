@@ -26,8 +26,13 @@ struct StatementMath {
     var payments: Money
     var statedClosing: Money    // typed in from the bank statement; zero = not entered
 
+    /// What the bank's statement would show as the closing balance for this
+    /// cycle: the balance before any payment made against *this* statement is
+    /// applied. Payments are accounted for separately, in `carryForward` and
+    /// `isFullyPaid` — a statement's own closing balance doesn't change based
+    /// on when you pay it.
     var computedClosing: Money {
-        previousBalance + charges + interest + fees - payments
+        previousBalance + charges + interest + fees
     }
 
     /// What you still owe after payments recorded so far.

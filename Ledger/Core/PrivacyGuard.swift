@@ -142,11 +142,18 @@ public enum PrivacyGuard {
             // Also catch grouped forms: "4147 4003 4779 9205" collapses to 16.
             run = ""
         }
-        // Second pass ignoring spaces and dashes, for grouped numbers.
-        let collapsed = text.filter { $0.isNumber }
-        if collapsed.count >= 13 {
-            for len in stride(from: 19, through: 13, by: -1) {
-                guard collapsed.count >= len else { continue }
+        // Second pass: grouped numbers like "4147 4003 4779 9205" or
+        // "4147-4003-4779-9205" — one number split by internal spacing.
+        // Scoped to a local run of digits/spaces/dashes, not the whole text,
+        // so an unrelated digit elsewhere (a date, a store number) can never
+        // be stitched together with one somewhere else into a false match.
+        guard let groupedRx = try? NSRegularExpression(pattern: #"\d[\d \-]{11,22}\d"#)
+        else { return false }
+        let ns = text as NSString
+        for m in groupedRx.matches(in: text, range: NSRange(location: 0, length: ns.length)) {
+            let collapsed = ns.substring(with: m.range).filter { $0.isNumber }
+            guard collapsed.count >= 13 else { continue }
+            for len in stride(from: min(19, collapsed.count), through: 13, by: -1) {
                 for start in 0...(collapsed.count - len) {
                     let slice = String(Array(collapsed)[start..<(start + len)])
                     if luhnValid(slice) { return true }
