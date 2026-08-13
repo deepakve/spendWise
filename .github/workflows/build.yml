@@ -29,10 +29,10 @@ jobs:
 
       - name: DIAGNOSTIC - print PlaceholderIcon cases
         run: |
-          f=$(find /Applications/Xcode_16.2.app -path '*AppleProductTypes*' -name '*.swiftinterface' | head -1)
-          echo "interface file: $f"
-          grep -A 60 "enum PlaceholderIcon" "$f" || echo "not found via grep, dumping whole file"
-          test -n "$f" && cat "$f" | grep -i "case " | head -100
+          find /Applications/Xcode_16.2.app -iname '*AppleProductTypes*' 2>/dev/null
+          f=/Applications/Xcode_16.2.app/Contents/SharedFrameworks/SwiftPM.framework/Versions/A/SharedSupport/ManifestAPI/AppleProductTypes.swiftmodule/arm64-apple-macos.swiftinterface
+          wc -l "$f"
+          cat "$f"
 
       - name: List available schemes and destinations
         run: xcodebuild -scheme Ledger -showdestinations
