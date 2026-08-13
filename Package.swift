@@ -14,7 +14,11 @@ let package = Package(
             teamIdentifier: "",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .moneyBag),
+            // No placeholder icon set: the exact PlaceholderIcon case names aren't
+            // part of AppleProductTypes' public interface (only resolvable inside
+            // Xcode/Swift Playgrounds' icon picker), so guessing one risked another
+            // build break. Pick a real icon in Xcode's app icon editor once it's
+            // available, or set an asset-based icon via iconAssetName.
             accentColor: .presetColor(.blue),
             supportedDeviceFamilies: [.phone, .pad],
             supportedInterfaceOrientations: [.portrait, .landscapeLeft, .landscapeRight],
