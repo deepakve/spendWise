@@ -51,7 +51,8 @@ struct ScanReceiptView: View {
                               systemImage: "doc.viewfinder")
                             .font(Face.body(16, weight: .medium))
                             .frame(maxWidth: .infinity).padding(.vertical, 15)
-                            .background(.white, in: RoundedRectangle(cornerRadius: 14))
+                            .foregroundStyle(Ink.primary)
+                            .background(Ink.surface, in: RoundedRectangle(cornerRadius: 14))
                             .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Ink.rule))
                     }
                 }
@@ -119,10 +120,10 @@ struct ScanReceiptView: View {
                                             .font(Face.body(12,
                                                 weight: manualCard?.objectID == c.objectID ? .semibold : .regular))
                                             .foregroundStyle(manualCard?.objectID == c.objectID
-                                                             ? .white : Ink.primary)
+                                                             ? Ink.onPrimary : Ink.primary)
                                             .padding(.horizontal, 11).padding(.vertical, 7)
                                             .background(manualCard?.objectID == c.objectID
-                                                        ? Ink.primary : Color.white, in: Capsule())
+                                                        ? Ink.primary : Ink.surface, in: Capsule())
                                             .overlay(Capsule().strokeBorder(Ink.rule))
                                     }
                                 }
@@ -144,7 +145,7 @@ struct ScanReceiptView: View {
                 Label(readyToUse(s) ? "Use this" : "Answer the questions above",
                       systemImage: readyToUse(s) ? "arrow.right.circle.fill" : "questionmark.circle")
                     .font(Face.body(16, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(readyToUse(s) ? Ink.onPrimary : Color.white)
                     .frame(maxWidth: .infinity).padding(.vertical, 15)
                     .background(readyToUse(s) ? Ink.primary : Ink.faint,
                                 in: RoundedRectangle(cornerRadius: 14))
@@ -153,7 +154,7 @@ struct ScanReceiptView: View {
             .padding(.top, 4)
         }
         .padding(18)
-        .background(.white, in: RoundedRectangle(cornerRadius: 16))
+        .background(Ink.surface, in: RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Ink.rule))
         .sheet(isPresented: $showAdd) {
             QuickAddView(defaultDate: scan?.date ?? manualDate,

@@ -91,7 +91,9 @@ struct BudgetProgressView: View {
                                       : (row.ratio > progress + 0.15 ? Ink.brass : Ink.mint))
                                 .frame(width: geo.size.width * min(row.ratio, 1), height: 6)
                             // Pace marker: where this should be right now.
-                            Rectangle().fill(Ink.primary.opacity(0.45))
+                            // Budget/category visuals are in scope for the
+                            // cinematic accent, per DESIGN-DIRECTION-CINEMATIC.md.
+                            Rectangle().fill(Ink.accent)
                                 .frame(width: 1.5, height: 11)
                                 .offset(x: geo.size.width * progress, y: -2.5)
                         }
@@ -104,8 +106,7 @@ struct BudgetProgressView: View {
                 .font(.system(size: 10)).foregroundStyle(Ink.faint)
         }
         .padding(18)
-        .background(.white, in: RoundedRectangle(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Ink.rule))
+        .glassPanel()
     }
 }
 

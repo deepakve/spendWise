@@ -174,7 +174,7 @@ struct BonusTrackerView: View {
             }
         }
         .padding(18)
-        .background(.white, in: RoundedRectangle(cornerRadius: 16))
+        .background(Ink.surface, in: RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16)
             .strokeBorder(progress.isBehind ? progress.tint.opacity(0.5) : Ink.rule,
                           lineWidth: progress.isBehind ? 1.5 : 1))

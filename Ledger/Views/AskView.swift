@@ -76,7 +76,7 @@ struct AskView: View {
                                 .font(.system(size: 11)).foregroundStyle(Ink.faint)
                         }
                         .padding(.horizontal, 15).padding(.vertical, 13)
-                        .background(.white, in: RoundedRectangle(cornerRadius: 12))
+                        .background(Ink.surface, in: RoundedRectangle(cornerRadius: 12))
                         .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Ink.rule))
                     }
                     .buttonStyle(.plain)
@@ -96,13 +96,13 @@ struct AskView: View {
                 .submitLabel(.send)
                 .onSubmit { ask(input) }
                 .padding(.horizontal, 16).padding(.vertical, 13)
-                .background(.white, in: Capsule())
+                .background(Ink.surface, in: Capsule())
                 .overlay(Capsule().strokeBorder(Ink.rule))
 
             Button { ask(input) } label: {
                 Image(systemName: "arrow.up")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(input.isEmpty ? Color.white : Ink.onPrimary)
                     .frame(width: 44, height: 44)
                     .background(input.isEmpty ? Ink.faint : Ink.primary, in: Circle())
             }
@@ -136,7 +136,7 @@ private struct TurnCard: View {
                 Spacer()
                 Text(turn.question)
                     .font(Face.body(14, weight: .medium))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Ink.onPrimary)
                     .padding(.horizontal, 15).padding(.vertical, 10)
                     .background(Ink.primary, in: RoundedRectangle(cornerRadius: 15))
             }
@@ -210,7 +210,7 @@ private struct TurnCard: View {
                 }
             }
             .padding(18)
-            .background(.white, in: RoundedRectangle(cornerRadius: 18))
+            .background(Ink.surface, in: RoundedRectangle(cornerRadius: 18))
             .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Ink.rule))
 
             ScrollView(.horizontal, showsIndicators: false) {

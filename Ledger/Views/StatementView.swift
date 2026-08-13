@@ -39,6 +39,7 @@ struct StatementView: View {
 
     var body: some View {
         List {
+            if statement.needsReview { collisionBanner }
             cycleSection
             summarySection
             reconcileSection
@@ -52,6 +53,29 @@ struct StatementView: View {
         }
         .onAppear(perform: loadFields)
         .onDisappear(perform: persistFields)
+    }
+
+    // A CloudKit-driven remote change landed on this statement while there
+    // was an unsaved local edit in flight — per SECURITY-ARCHITECTURE.md §5,
+    // that's surfaced rather than silently resolved by the default merge
+    // policy. Check the numbers below against what's expected before
+    // dismissing.
+    private var collisionBanner: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 6) {
+                Label("Edited on both devices around the same time", systemImage: "exclamationmark.triangle.fill")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.orange)
+                Text("This statement changed on another device close to when it changed here. Double-check the numbers below reflect what you expect, then mark it reviewed.")
+                    .font(.caption).foregroundStyle(.secondary)
+                Button("Mark reviewed") {
+                    statement.needsReview = false
+                    Persistence.shared.save()
+                }
+                .buttonStyle(.bordered).controlSize(.small)
+            }
+            .padding(.vertical, 4)
+        }
     }
 
     private var cycleSection: some View {
@@ -245,6 +269,7 @@ struct StatementView: View {
         s.statedClosingCents = Int64(Money.parse(statedClosing)?.cents ?? 0)
         s.interestCents = Int64(Money.parse(interest)?.cents ?? 0)
         s.feesCents = Int64(Money.parse(fees)?.cents ?? 0)
+        s.updatedAt = .now
         Persistence.shared.save()
     }
 

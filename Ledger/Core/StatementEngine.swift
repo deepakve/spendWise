@@ -80,6 +80,7 @@ struct StatementEngine {
         s.id = UUID()
         s.card = card
         s.cycleKey = cycleKey
+        s.updatedAt = .now
         let cycle = calendar.cycle(key: cycleKey)
         s.openedOn = cycle.start
         s.closedOn = cycle.end
@@ -127,6 +128,7 @@ struct StatementEngine {
         let p = CDPayment(context: context)
         p.id = UUID(); p.amountCents = Int64(amount.cents); p.paidOn = date
         p.note = note; p.statement = s
+        s.updatedAt = .now
     }
 }
 

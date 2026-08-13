@@ -1,6 +1,5 @@
 import SwiftUI
 import CoreData
-import CloudKit
 
 // MARK: - Cards
 
@@ -234,8 +233,6 @@ struct SettingsView: View {
     @EnvironmentObject private var store: Persistence
     @FetchRequest(sortDescriptors: []) private var expenses: FetchedResults<CDExpense>
 
-    @State private var share: CKShare?
-    @State private var showShare = false
     @State private var showImporter = false
     @State private var message: String?
     @State private var exportURL: URL?
@@ -244,8 +241,8 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    Button {
-                        Task { await prepareShare() }
+                    NavigationLink {
+                        ShareInviteView()
                     } label: {
                         Label("Share this ledger with your wife", systemImage: "person.2.fill")
                     }
@@ -296,47 +293,11 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
-            .sheet(isPresented: $showShare) {
-                if let share {
-                    CloudSharingView(share: share,
-                                     container: CKContainer(identifier: Persistence.containerID))
-                }
-            }
             .fileImporter(isPresented: $showImporter,
                           allowedContentTypes: [.commaSeparatedText]) { result in
                 guard case .success(let url) = result else { return }
                 importCSV(url)
             }
-        }
-    }
-
-    private func prepareShare() async {
-        if let existing = store.existingShare() {
-            share = existing; showShare = true; return
-        }
-        // Zone-wide share: NSPersistentCloudKitContainer shares the whole zone
-        // that the given object lives in, so any one object from the private
-        // store anchors a share covering the entire ledger — one invite grants
-        // everything, rather than asking her to accept a share per record.
-        guard let store0 = store.privateStore else {
-            message = "Sync isn't ready yet. Try again in a moment."
-            return
-        }
-        let cardReq = NSFetchRequest<CDCard>(entityName: "CDCard")
-        cardReq.affectedStores = [store0]
-        cardReq.fetchLimit = 1
-        guard let anchor = try? ctx.fetch(cardReq).first else {
-            message = "Add at least one card before sharing."
-            return
-        }
-        do {
-            let container = store.container
-            let (_, newShare, _) = try await container.share([anchor], to: nil)
-            newShare[CKShare.SystemFieldKey.title] = "Our Ledger" as CKRecordValue
-            share = newShare
-            showShare = true
-        } catch {
-            message = "Could not start sharing: \(error.localizedDescription)"
         }
     }
 

@@ -85,7 +85,7 @@ struct QuickAddView: View {
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Ink.secondary)
                     .frame(width: 36, height: 36)
-                    .background(.white, in: Circle())
+                    .background(Ink.surface, in: Circle())
                     .overlay(Circle().strokeBorder(Ink.rule))
             }
             Spacer()
@@ -100,7 +100,7 @@ struct QuickAddView: View {
                 .font(Face.body(13, weight: .medium))
                 .foregroundStyle(isRefund ? Ink.mint : Ink.secondary)
                 .padding(.horizontal, 13).padding(.vertical, 8)
-                .background(isRefund ? Ink.mint.opacity(0.12) : .white, in: Capsule())
+                .background(isRefund ? Ink.mint.opacity(0.12) : Ink.surface, in: Capsule())
                 .overlay(Capsule().strokeBorder(isRefund ? Ink.mint.opacity(0.4) : Ink.rule))
             }
         }
@@ -160,7 +160,7 @@ struct QuickAddView: View {
                 }
             }
             .padding(.horizontal, 14).padding(.vertical, 11)
-            .background(.white, in: RoundedRectangle(cornerRadius: 14))
+            .background(Ink.surface, in: RoundedRectangle(cornerRadius: 14))
             .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Ink.rule))
 
             if merchantFocused && !suggestions.isEmpty {
@@ -173,7 +173,7 @@ struct QuickAddView: View {
                                 Text(s).font(Face.body(13))
                                     .foregroundStyle(Ink.primary)
                                     .padding(.horizontal, 12).padding(.vertical, 7)
-                                    .background(.white, in: Capsule())
+                                    .background(Ink.surface, in: Capsule())
                                     .overlay(Capsule().strokeBorder(Ink.rule))
                             }
                         }
@@ -225,12 +225,15 @@ struct QuickAddView: View {
                                     }
                                 }
                                 .overlay(
+                                    // Lime ring on selection — the card rail
+                                    // is one of the screens scoped for full
+                                    // cinematic treatment.
                                     RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                        .strokeBorder(Ink.primary, lineWidth: isOn ? 2.5 : 0)
+                                        .strokeBorder(Ink.accent, lineWidth: isOn ? 2.5 : 0)
                                 )
                                 .scaleEffect(isOn ? 1.06 : 1)
-                                .shadow(color: skin.bottom.opacity(isOn ? 0.4 : 0.15),
-                                        radius: isOn ? 8 : 3, y: isOn ? 4 : 2)
+                                .shadow(color: (isOn ? Ink.accent : skin.bottom).opacity(isOn ? 0.5 : 0.15),
+                                        radius: isOn ? 10 : 3, y: isOn ? 4 : 2)
                             Text(card.name ?? "")
                                 .font(.system(size: 9, weight: isOn ? .semibold : .regular))
                                 .foregroundStyle(isOn ? Ink.primary : Ink.faint)
@@ -300,7 +303,7 @@ struct QuickAddView: View {
         }
         .foregroundStyle(on ? tint : Ink.secondary)
         .padding(.horizontal, 12).padding(.vertical, 8)
-        .background(on ? tint.opacity(0.12) : .white, in: Capsule())
+        .background(on ? tint.opacity(0.12) : Ink.surface, in: Capsule())
         .overlay(Capsule().strokeBorder(on ? tint.opacity(0.35) : Ink.rule))
     }
 
@@ -311,7 +314,7 @@ struct QuickAddView: View {
             TextField("Note — names here are searchable", text: $note, axis: .vertical)
                 .font(Face.body(14))
                 .padding(.horizontal, 13).padding(.vertical, 10)
-                .background(.white, in: RoundedRectangle(cornerRadius: 12))
+                .background(Ink.surface, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Ink.rule))
         }
         .padding(.horizontal, 20).padding(.top, 12)
@@ -337,7 +340,7 @@ struct QuickAddView: View {
                             .foregroundStyle(Ink.primary)
                             .frame(maxWidth: .infinity)
                             .frame(height: 54)
-                            .background(.white, in: RoundedRectangle(cornerRadius: 14))
+                            .background(Ink.surface, in: RoundedRectangle(cornerRadius: 14))
                             .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Ink.rule))
                         }
                         .buttonStyle(KeyStyle())
@@ -378,7 +381,7 @@ struct QuickAddView: View {
                 Text(canSave ? "Save \(amount.abs.formatted())" : "Enter an amount")
             }
             .font(Face.body(17, weight: .semibold))
-            .foregroundStyle(.white)
+            .foregroundStyle(canSave ? Ink.onPrimary : Color.white)
             .frame(maxWidth: .infinity).frame(height: 54)
             .background(canSave ? Ink.primary : Ink.faint,
                         in: RoundedRectangle(cornerRadius: 16))

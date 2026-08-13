@@ -323,7 +323,7 @@ struct CardDetailView: View {
             }
         }
         .padding(18)
-        .background(.white, in: RoundedRectangle(cornerRadius: 16))
+        .background(Ink.surface, in: RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Ink.rule))
     }
 
@@ -365,7 +365,7 @@ struct CardDetailView: View {
             } label: {
                 Image(systemName: "doc.on.doc")
                     .font(.system(size: 15))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Ink.onPrimary)
                     .frame(width: 38, height: 38)
                     .background(Ink.primary, in: Circle())
             }
@@ -409,7 +409,7 @@ struct CardDetailView: View {
             Perforation().padding(.top, 4)
         }
         .padding(18)
-        .background(.white, in: RoundedRectangle(cornerRadius: 16))
+        .background(Ink.surface, in: RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Ink.rule))
     }
 
@@ -457,7 +457,7 @@ struct CardDetailView: View {
         }
         .foregroundStyle(tint)
         .padding(.horizontal, 16).padding(.vertical, 14)
-        .background(.white, in: RoundedRectangle(cornerRadius: 13))
+        .background(Ink.surface, in: RoundedRectangle(cornerRadius: 13))
         .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(Ink.rule))
     }
 

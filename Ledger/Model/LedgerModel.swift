@@ -93,6 +93,11 @@ enum LedgerModel {
             attr("interestCents", .integer64AttributeType, def: 0),
             attr("feesCents", .integer64AttributeType, def: 0),
             attr("notes", .stringAttributeType, def: ""),
+            attr("updatedAt", .dateAttributeType),
+            // Set when a CloudKit-driven remote change lands on a statement
+            // that also has an unsaved local edit in flight — a genuine
+            // two-device collision. See ConflictWatcher.swift.
+            attr("needsReview", .booleanAttributeType, def: false),
         ]
 
         // MARK: Payment
@@ -283,6 +288,8 @@ final class CDStatement: NSManagedObject {
     @NSManaged var interestCents: Int64
     @NSManaged var feesCents: Int64
     @NSManaged var notes: String?
+    @NSManaged var updatedAt: Date?
+    @NSManaged var needsReview: Bool
     @NSManaged var card: CDCard?
     @NSManaged var payments: NSSet?
 }

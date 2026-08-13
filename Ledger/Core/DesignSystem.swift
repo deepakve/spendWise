@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Design language: "card on receipt paper".
+// Design language: "card on receipt paper", cinematic direction (13 Aug 2026).
 //
 // Two materials define this subject. Cards are laminated, layered, metallic,
 // saturated. Receipts are thin, monospaced, ruled, almost colourless. The app
@@ -11,24 +11,70 @@ import SwiftUI
 // This is why numbers are monospaced everywhere. In a ledger, digits that line
 // up column-to-column are legible in a way proportional figures never are, and
 // it's the visual signature of every receipt and statement you've ever read.
+//
+// Per DESIGN-DIRECTION-CINEMATIC.md: tokens below are dark-mode aware — light
+// mode keeps the original "receipt paper" restraint, dark mode leans into the
+// obsidian/lime cinematic reference. That split is a token-level change, so it
+// reaches every screen automatically. New *motion* (spring lifts, scroll
+// reveals, glow) is scoped separately, screen by screen — see Motion below and
+// the call sites that check it — to the card rail, first-launch splash,
+// share-invite screen, and budget/category visuals. The ledger and statement
+// list screens keep their current restraint on purpose: someone reconciling a
+// bill is not the moment for a scroll-triggered fade.
 
 enum Ink {
-    // Substrate — warm-neutral, not pure grey. Receipt paper has a tint.
-    static let paper       = Color(hex: "#F7F5F2")
-    static let paperDark   = Color(hex: "#14151A")
-    static let rule        = Color(hex: "#D8D3CB")
-    static let ruleDark    = Color(hex: "#2C2E38")
+    // Substrate — warm-neutral paper in light mode, obsidian in dark mode.
+    static let paper = Color(light: "#F7F5F2", dark: "#0A0A0A")
+    // rgba(255,255,255,0.06) hairline from the reference, over obsidian.
+    static let rule = Color(light: "#D8D3CB", darkBase: .white, darkOpacity: 0.06)
 
     // Type
-    static let primary     = Color(hex: "#16171C")
-    static let secondary   = Color(hex: "#6B6862")
-    static let faint       = Color(hex: "#A8A29A")
+    static let primary = Color(light: "#16171C", dark: "#FAFAFA")
+    static let secondary = Color(light: "#6B6862", darkBase: .white, darkOpacity: 0.62)
+    static let faint = Color(light: "#A8A29A", darkBase: .white, darkOpacity: 0.4)
 
-    // Semantics — brass for money in, coral for owed, mint for refunds.
+    /// Content placed ON a surface filled with `Ink.primary` (a save stamp's
+    /// dark chip, a "primary" filled button) — the inverse of `primary`, so
+    /// it always stays readable as `primary` itself flips between appearances.
+    static let onPrimary = Color(light: "#FFFFFF", dark: "#0A0A0A")
+
+    /// A raised "card" panel background, distinct from the `paper` page
+    /// background behind it — white in light mode (unchanged from before),
+    /// a lighter-than-obsidian charcoal in dark mode so panels still read as
+    /// raised against the page rather than disappearing into it.
+    static let surface = Color(light: "#FFFFFF", dark: "#17181C")
+
+    // Semantics — brass for money in, coral for owed, mint for refunds. Fixed
+    // across appearance: these carry meaning, not surface decoration.
     static let brass       = Color(hex: "#B8873B")
     static let coral       = Color(hex: "#E0553F")
     static let mint        = Color(hex: "#2E9E7B")
     static let ocean       = Color(hex: "#2B5CE0")
+
+    /// Acid lime — the one new accent from the cinematic reference. Scoped to
+    /// the screens with full cinematic treatment (card rail, first-launch
+    /// splash, share-invite, budget/category visuals): the reference itself
+    /// warns lime-on-obsidian can fail contrast if used for body text, so
+    /// this is for accents and highlights only, never something you read.
+    static let accent = Color(hex: "#D4FF4F")
+
+    /// rgba(255,255,255,0.03) tinted surface from the reference, layered
+    /// over `.ultraThinMaterial` by `glassPanel()` below.
+    static let glassTint = Color.white.opacity(0.03)
+}
+
+enum Layout {
+    /// The reference's 16px card radius, applied consistently to card-level
+    /// panels on the cinematic-treatment screens.
+    static let cardRadius: CGFloat = 16
+}
+
+enum Motion {
+    /// Decorative animation (spring lifts, scroll reveals, glow pulses) must
+    /// check this and skip itself when true. Feedback animation — a save
+    /// stamp, a checkmark, a balance updating — is exempt: it's confirming
+    /// something happened, not decorating the screen.
+    static var prefersReduced: Bool { UIAccessibility.isReduceMotionEnabled }
 }
 
 enum Face {
@@ -159,6 +205,39 @@ extension Color {
                   green: Double((v >> 8) & 0xFF)/255,
                   blue: Double(v & 0xFF)/255)
     }
+
+    /// Switches between a light-mode hex and a dark-mode hex automatically,
+    /// based on the current trait environment — no environment plumbing
+    /// needed at the call site, so `Ink` can stay a plain enum of tokens.
+    init(light: String, dark: String) {
+        self.init(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(Color(hex: dark)) : UIColor(Color(hex: light))
+        })
+    }
+
+    /// Light-mode hex vs. a translucent dark-mode value — for the
+    /// reference's rgba(255,255,255,0.06)-style hairlines and surfaces,
+    /// which are a base colour plus opacity rather than a flat hex.
+    init(light: String, darkBase: Color, darkOpacity: Double) {
+        self.init(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(darkBase.opacity(darkOpacity)) : UIColor(Color(hex: light))
+        })
+    }
+}
+
+extension View {
+    /// Frosted glass surface for the cinematic-treatment screens: system
+    /// material plus a faint tint and hairline border, per the reference's
+    /// backdrop-blur-xl look — translates more natively to iOS materials
+    /// than it did to the original web reference.
+    func glassPanel(radius: CGFloat = Layout.cardRadius) -> some View {
+        self
+            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .background(Ink.glassTint, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: radius, style: .continuous).strokeBorder(Ink.rule))
+    }
 }
 
 // MARK: - Feedback
@@ -179,7 +258,7 @@ struct Toast: View {
             Image(systemName: symbol)
             Text(text).font(Face.body(14, weight: .medium))
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Ink.onPrimary)
         .padding(.horizontal, 16).padding(.vertical, 11)
         .background(Ink.primary, in: Capsule())
         .shadow(color: .black.opacity(0.25), radius: 14, y: 6)

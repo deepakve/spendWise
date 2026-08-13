@@ -4,11 +4,30 @@ import CoreData
 @main
 struct LedgerApp: App {
     @StateObject private var store = Persistence.shared
+    @AppStorage("hasSeenSplash") private var hasSeenSplash = false
+    // Separate from hasSeenSplash so SplashView's own fade-out animation
+    // isn't cut short by the parent view swapping away the instant the
+    // AppStorage flag flips — only the deliberate onFinished callback,
+    // after the fade completes, moves on to the main UI.
+    @State private var showMainUI = false
 
     init() { Seeder.run(context: Persistence.shared.context) }
 
     var body: some Scene {
         WindowGroup {
+            if showMainUI {
+                mainUI
+            } else if hasSeenSplash {
+                // Not a first launch — skip the splash and its timers
+                // entirely rather than showing it on every cold start.
+                Color.clear.onAppear { showMainUI = true }
+            } else {
+                SplashView { showMainUI = true }
+            }
+        }
+    }
+
+    private var mainUI: some View {
             LockGate {
               TabView {
                 DashboardView()
@@ -34,7 +53,6 @@ struct LedgerApp: App {
                   }
               }
             }
-        }
     }
 }
 

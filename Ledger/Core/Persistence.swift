@@ -74,7 +74,10 @@ final class Persistence: ObservableObject {
 
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.viewContext.transactionAuthor = ConflictWatcher.transactionAuthor
         try? container.viewContext.setQueryGenerationFrom(.current)
+
+        if !inMemory { ConflictWatcher.shared.start(container: container) }
     }
 
     var context: NSManagedObjectContext { container.viewContext }
