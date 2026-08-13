@@ -29,9 +29,10 @@ jobs:
 
       - name: DIAGNOSTIC - print PlaceholderIcon cases
         run: |
-          grep -rl "PlaceholderIcon" /Applications/Xcode_16.2.app 2>/dev/null | while read -r f; do
+          for f in "/Applications/Xcode_16.2.app/Contents/PlugIns/IDESwiftPackageUI.framework/Versions/A/IDESwiftPackageUI" \
+                   "/Applications/Xcode_16.2.app/Contents/SharedFrameworks/SwiftPM.framework/Versions/A/SharedSupport/ManifestAPI/libAppleProductTypes.dylib"; do
             echo "=== $f ==="
-            grep -a -n "PlaceholderIcon" "$f" -A 40
+            nm -gU "$f" 2>/dev/null | grep -i "PlaceholderIcon" | xcrun swift-demangle
           done
 
       - name: List available schemes and destinations
