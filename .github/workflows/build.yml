@@ -29,9 +29,9 @@ jobs:
 
       - name: DIAGNOSTIC - print PlaceholderIcon cases
         run: |
-          find /Applications/Xcode_16.2.app -iname '*PackageDescription*.swiftinterface' 2>/dev/null | while read -r f; do
+          grep -rl "PlaceholderIcon" /Applications/Xcode_16.2.app 2>/dev/null | while read -r f; do
             echo "=== $f ==="
-            grep -n "PlaceholderIcon" "$f" -A 40
+            grep -a -n "PlaceholderIcon" "$f" -A 40
           done
 
       - name: List available schemes and destinations
