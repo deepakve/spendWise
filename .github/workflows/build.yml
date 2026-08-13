@@ -19,9 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
+      # Deliberately no `xcode-select`: pinning to a specific Xcode version
+      # (e.g. 16.2) can select one whose paired iOS Simulator runtime isn't
+      # pre-cached on this runner image, even though other runtimes are. The
+      # image's default Xcode is the one guaranteed to have its own iOS
+      # runtime available without an on-demand download.
       - name: Show toolchain versions
         run: |
           xcodebuild -version
@@ -30,12 +32,30 @@ jobs:
       - name: List available schemes and destinations
         run: xcodebuild -scheme Ledger -showdestinations
 
+      - name: Resolve an available iOS Simulator destination
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+import json, sys
+data = json.load(sys.stdin)
+for runtime, devices in data["devices"].items():
+    if "iOS" not in runtime:
+        continue
+    for d in devices:
+        if d.get("isAvailable"):
+            print(d["udid"])
+            sys.exit(0)
+sys.exit(1)
+')
+          echo "Selected simulator UDID: $UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
       - name: Build (Ledger app, iOS Simulator)
         run: |
           set -o pipefail
           xcodebuild build \
             -scheme Ledger \
-            -destination 'generic/platform=iOS Simulator' \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
             CODE_SIGNING_ALLOWED=NO \
             | tee build.log
           echo "----- build.log tail -----"
@@ -46,7 +66,7 @@ jobs:
           set -o pipefail
           xcodebuild test \
             -scheme Ledger \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
             CODE_SIGNING_ALLOWED=NO \
             | tee test.log
           echo "----- test.log tail -----"
