@@ -29,10 +29,10 @@ jobs:
 
       - name: DIAGNOSTIC - print PlaceholderIcon cases
         run: |
-          find /Applications/Xcode_16.2.app -iname '*AppleProductTypes*' 2>/dev/null
-          f=/Applications/Xcode_16.2.app/Contents/SharedFrameworks/SwiftPM.framework/Versions/A/SharedSupport/ManifestAPI/AppleProductTypes.swiftmodule/arm64-apple-macos.swiftinterface
-          wc -l "$f"
-          cat "$f"
+          find /Applications/Xcode_16.2.app -iname '*PackageDescription*.swiftinterface' 2>/dev/null | while read -r f; do
+            echo "=== $f ==="
+            grep -n "PlaceholderIcon" "$f" -A 40
+          done
 
       - name: List available schemes and destinations
         run: xcodebuild -scheme Ledger -showdestinations
