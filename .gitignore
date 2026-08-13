@@ -1,0 +1,17 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+.DS_Store
+
+# Swift Playgrounds
+*.swiftpm/xcuserdata/
+.build/
+
+# Never commit these
+*.p12
+*.mobileprovision
+*.cer
+secrets.plist

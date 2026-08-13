@@ -1,0 +1,62 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # This project (SwiftUI + Core Data + CloudKit, built as a Swift Playgrounds
+    # "App" package via AppleProductTypes) can only be compiled on macOS with
+    # Xcode's iOS SDKs — there is no Linux toolchain that provides UIKit,
+    # SwiftUI, CoreData or CloudKit. This is the only place in CI (or anywhere
+    # in this project's normal dev loop, until the Mac arrives) that actually
+    # invokes the compiler.
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Show toolchain versions
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: List available schemes and destinations
+        run: xcodebuild -scheme Ledger -showdestinations
+
+      - name: Build (Ledger app, iOS Simulator)
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -scheme Ledger \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee build.log
+          echo "----- build.log tail -----"
+          tail -n 200 build.log
+
+      - name: Run tests (LedgerTests, iOS Simulator)
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -scheme Ledger \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee test.log
+          echo "----- test.log tail -----"
+          tail -n 200 test.log
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-logs
+          path: |
+            build.log
+            test.log
