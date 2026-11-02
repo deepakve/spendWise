@@ -415,12 +415,15 @@ struct LogFromAlertIntent: AppIntent {
         let signed = parsed.isRefund ? -amount : amount
 
         // sourceText means the same SMS re-firing can never create a second row.
+        // The raw alert goes into notes, which syncs to Subha's device via
+        // CloudKit — scan it first rather than trusting every bank's alert
+        // format to never print more than a last-4.
         let outcome = DuplicateGuard.create(
             date: .now, amount: signed,
             merchant: parsed.merchant ?? "Unknown merchant",
             category: category, card: matched, payer: .us,
             notes: problems.isEmpty ? ""
-                : "Needs a look — \(problems.joined(separator: ", ")). Original alert: \(alertText)",
+                : "Needs a look — \(problems.joined(separator: ", ")). Original alert: \(PrivacyGuard.redactingLikelyCardNumbers(alertText))",
             source: "bankAlert", sourceText: alertText,
             needsReview: !problems.isEmpty && askIfUnclear,
             context: ctx)

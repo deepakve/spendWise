@@ -81,6 +81,7 @@ struct VaultEditView: View {
 
     var body: some View {
         NavigationStack {
+          CaptureGuard {
             Form {
                 Section("Card") {
                     TextField("Card number", text: $s.number).keyboardType(.numberPad)
@@ -122,6 +123,7 @@ struct VaultEditView: View {
             .onAppear {
                 if let existing { s = existing; showCVV = !existing.cvv.isEmpty }
             }
+          }
         }
     }
 }
@@ -234,8 +236,10 @@ struct SettingsView: View {
     @FetchRequest(sortDescriptors: []) private var expenses: FetchedResults<CDExpense>
 
     @State private var showImporter = false
+    @State private var showExporter = false
     @State private var message: String?
     @State private var exportURL: URL?
+    @AppStorage("utilizationAlertPercent") private var utilizationThreshold = 90
 
     var body: some View {
         NavigationStack {
@@ -258,6 +262,16 @@ struct SettingsView: View {
                     if let e = store.syncError {
                         Text(e).font(.caption).foregroundStyle(.secondary)
                     }
+                }
+
+                Section {
+                    Stepper(value: $utilizationThreshold, in: 10...100, step: 5) {
+                        LabeledContent("Alert me at", value: "\(utilizationThreshold)% of limit")
+                    }
+                } header: {
+                    Text("Alerts")
+                } footer: {
+                    Text("A notification fires the moment a purchase pushes a card's spend this cycle past this percentage of its credit limit — once per card per cycle. Due-date reminders are automatic and need no setting.")
                 }
 
                 Section("Data") {
@@ -298,6 +312,12 @@ struct SettingsView: View {
                 guard case .success(let url) = result else { return }
                 importCSV(url)
             }
+            .fileMover(isPresented: $showExporter, file: exportURL) { result in
+                switch result {
+                case .success: message = "Exported to Files."
+                case .failure(let error): message = "Export failed: \(error.localizedDescription)"
+                }
+            }
         }
     }
 
@@ -330,7 +350,7 @@ struct SettingsView: View {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("Ledger.csv")
         try? out.write(to: url, atomically: true, encoding: .utf8)
         exportURL = url
-        message = "Exported to Files › Ledger.csv"
+        showExporter = true
     }
 }
 

@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 // Privacy barrier.
 //
@@ -163,6 +164,19 @@ public enum PrivacyGuard {
         return false
     }
 
+    /// For raw third-party text (a bank alert, a receipt) that's about to be
+    /// stored in a field that syncs beyond this device — CloudKit, in a
+    /// shared ledger. Unlike `payload()`, which refuses outright, this fails
+    /// soft: if the text looks like it carries a card number, the whole
+    /// thing is swapped for a placeholder rather than leaving a PAN sitting
+    /// in a synced `notes` field. Losing the rest of that text is the
+    /// accepted cost of not trying to surgically excise just the match.
+    public static func redactingLikelyCardNumbers(_ text: String) -> String {
+        containsLikelyCardNumber(text)
+            ? "[hidden — this looked like it contained a card number]"
+            : text
+    }
+
     static func luhnValid(_ number: String) -> Bool {
         let digits = number.compactMap { $0.wholeNumberValue }
         guard digits.count >= 13 else { return false }
@@ -198,7 +212,7 @@ public enum AuditLog {
         var entries = all()
         entries.append(Entry(id: UUID(), date: .now, host: host,
                              byteCount: text.utf8.count,
-                             sha256Prefix: String(text.simpleHash.prefix(12))))
+                             sha256Prefix: String(text.sha256Hex.prefix(12))))
         if entries.count > 500 { entries.removeFirst(entries.count - 500) }
         if let data = try? JSONEncoder().encode(entries) {
             UserDefaults.standard.set(data, forKey: key)
@@ -216,9 +230,7 @@ public enum AuditLog {
 }
 
 private extension String {
-    var simpleHash: String {
-        var hash: UInt64 = 5381
-        for byte in utf8 { hash = (hash &* 33) &+ UInt64(byte) }
-        return String(hash, radix: 16)
+    var sha256Hex: String {
+        SHA256.hash(data: Data(utf8)).compactMap { String(format: "%02x", $0) }.joined()
     }
 }

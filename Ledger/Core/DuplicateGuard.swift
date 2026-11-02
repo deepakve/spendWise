@@ -193,11 +193,13 @@ enum DuplicateGuard {
             e.notes = "Possible duplicate — \(match.reason) \(notes)"
                 .trimmingCharacters(in: .whitespaces)
             Persistence.shared.save()
+            Task { @MainActor in UtilizationAlerts.checkAfterExpense(card: card, context: context) }
             return .flagged(e, match)
         }
 
         e.needsReview = needsReview
         Persistence.shared.save()
+        Task { @MainActor in UtilizationAlerts.checkAfterExpense(card: card, context: context) }
         return .created(e)
     }
 
